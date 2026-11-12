@@ -1,8 +1,10 @@
 ## TODO LIST:
 - Create project structure symfony [x]
 - Create a simple symfony command, which accept a file bin/console boxes:calculate problems.txt and prints content of that file [x]
-- Create a class structures for the problem and simple test that will fail
-- Create insrution on how to run a program
+- Create a class structures for the problem and simple test that will fail [x]
+- Create a class for the solution [x]
+- Create insrution on how to run a program [x]
+- Add phpstan/php cs-fixer []
 
 
 IMPORTANT THINGS:

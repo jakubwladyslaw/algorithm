@@ -12,9 +12,9 @@ use PHPUnit\Framework\TestCase;
 final class BoxServiceTest extends TestCase
 {
     #[DataProvider('problems')]
-    public function testCalculateSmallestNumberOfCubeToFitInBox(Box $box, Cubes $cubes, int $expected): void
+    public function testMinimumCubesToFill(Box $box, Cubes $cubes, int $expected): void
     {
-        $result = (new BoxService())->calculateSmallestNumberOfCubeToFitInBox($box, $cubes);
+        $result = (new BoxService())->minimumCubesToFill($box, $cubes);
 
         self::assertSame($expected, $result);
     }
@@ -24,6 +24,32 @@ final class BoxServiceTest extends TestCase
      */
     public static function problems(): iterable
     {
+        yield 'not enough cubes' => [
+            'box' => new Box(width: 10, height: 10, depth: 10),
+            'cubes' => new Cubes(
+                new Cube(size: 1, qty: 1),
+                new Cube(size: 2, qty: 2),
+            ),
+            'expected' => -1,
+        ];
+
+        yield 'only 2x2x2 cubes fill the box' => [
+            'box' => new Box(width: 10, height: 10, depth: 10),
+            'cubes' => new Cubes(
+                new Cube(size: 2, qty: 125)
+            ),
+            'expected' => 125,
+        ];
+
+        yield 'extra 1x1x1 cube is not needed' => [
+            'box' => new Box(width: 10, height: 10, depth: 10),
+            'cubes' => new Cubes(
+                new Cube(size: 1, qty: 1),
+                new Cube(size: 2, qty: 125)
+            ),
+            'expected' => 125,
+        ];
+
         yield '2 2 2 8 1' => [
             'box' => new Box(width: 2, height: 2, depth: 2),
             'cubes' => new Cubes(

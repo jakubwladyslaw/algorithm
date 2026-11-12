@@ -17,26 +17,22 @@ final class BoxesCalculateCommandTest extends KernelTestCase
         $this->tester = new CommandTester($application->find('boxes:calculate'));
     }
 
-    public function testPrintsFileContent(): void
+    public function testPrintsSolution(): void
     {
-        $file = tempnam(sys_get_temp_dir(), 'problems');
-        file_put_contents($file, "3 4 5\n1 2 3\n");
-
-        try {
-            $this->tester->execute(['file' => $file]);
-        } finally {
-            unlink($file);
-        }
+        $this->tester->setInputs(['2 2 2 8 1']);
+        $this->tester->execute([]);
 
         $this->tester->assertCommandIsSuccessful();
-        self::assertSame("3 4 5\n1 2 3\n", $this->tester->getDisplay());
+        self::assertSame("1\n", $this->tester->getDisplay());
     }
 
-    public function testFailsWhenFileIsMissing(): void
+    public function testFailsOnInvalidLine(): void
     {
-        $this->tester->execute(['file' => '/nonexistent/problems.txt']);
+        $this->tester->setInputs(['2 2 2 8 1', '2 2 x 8']);
+        $this->tester->execute([], ['capture_stderr_separately' => true]);
 
         self::assertSame(Command::FAILURE, $this->tester->getStatusCode());
-        self::assertStringContainsString('does not exist', $this->tester->getDisplay());
+        self::assertSame("1\n", $this->tester->getDisplay(), 'Only answers go to stdout.');
+        self::assertStringContainsString('Line 2', $this->tester->getErrorOutput());
     }
 }

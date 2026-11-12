@@ -4,6 +4,20 @@ This is a Symfony project. Check `composer.json` for the exact Symfony/PHP versi
 in use, and read `symfony.lock` to see which recipes ran. Don't assume Doctrine,
 Twig, API Platform, Messenger, or Lock are installed unless one of those says so.
 
+## Project layout
+
+Layered, DDD style. Dependencies point inwards: Command → Application → Domain.
+
+- `src/Domain/`: domain layer. Entities, value objects and domain services with
+  the business rules. Pure PHP, no framework or infrastructure code.
+- `src/Application/`: application layer. Use cases that orchestrate the domain:
+  take domain objects, call domain services, return the result.
+- `src/Command/`: presentation layer (console commands). Read raw input, turn it
+  into domain objects, call a use case, print output.
+- `tests/`: mirrors `src/`. Domain is covered by unit tests (`TestCase`),
+  commands by `KernelTestCase`.
+- `config/`: standard Symfony config; services are autowired from `src/`.
+
 ## Ask before generating
 
 If the task doesn't specify, ask rather than guess:
